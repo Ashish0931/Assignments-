@@ -1,0 +1,205 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy.stats as st
+from scipy.integrate import quad
+Calculate the mean, median, mode and standard deviation for the problem statements 1& 2.
+
+Problem Statement 1: The marks awarded for an assignment set for a Year 8 class of 20 students were as follows: 6 7 5 7 7 8 7 6 9 7 4 10 6 8 8 9 5 6 4 8
+
+
+arr=np.array([6,7,5,7,7,8,7,6,9,7,4,10,6,8,8,9,5,6,4,8])
+mean=np.mean(arr)
+median=np.median(arr)
+std=np.std(arr)
+print("The mean of the data is : {}".format(mean))
+print("The median of the data is {}: ".format(median))
+print("The standard deviation of the data is : {}".format(std))
+The mean of the data is : 6.85
+The median of the data is 7.0: 
+The standard deviation of the data is : 1.5898113095584647
+The number of calls from motorists per day for roadside service was recorded for a particular month: 28, 122, 217, 130, 120, 86, 80, 90, 140, 120, 70, 40, 145, 113, 90, 68, 174, 194, 170, 100, 75, 104, 97, 75, 123, 100, 75, 104, 97, 75, 123, 100, 89, 120, 109
+
+arr1=np.array([28, 122, 217, 130, 120, 86, 80, 90, 140, 120, 70, 40, 145, 113, 90, 68, 174, 194, 170,
+100, 75, 104, 97, 75,123, 100, 75, 104, 97, 75, 123, 100, 89, 120, 109])
+mean=np.mean(arr1)
+median=np.median(arr1)
+std=np.std(arr1)
+print("The mean of the data is : {}".format(mean))
+print("The median of the data is {}: ".format(median))
+print("The standard deviation of the data is : {}".format(std))
+The mean of the data is : 107.51428571428572
+The median of the data is 100.0: 
+The standard deviation of the data is : 38.77287080168403
+Problem Statement 3: The number of times I go to the gym in weekdays, are given below along with its associated probability: x = 0, 1, 2, 3, 4, 5 f(x) = 0.09, 0.15, 0.40, 0.25, 0.10, 0.01 Calculate the mean no. of workouts in a week. Also evaluate the variance involved in it
+
+x=[0, 1, 2, 3, 4, 5]
+p=[0.09, 0.15, 0.40, 0.25, 0.10, 0.01]
+avg=0
+var=0
+for i,j in zip(x,p):
+    avg=avg+i*j
+for i,j in zip(x,p):
+    var=var+(((i-avg)**2)*j)
+print("The mean number of workouts in a week are {}".format(avg))
+print("The variance is {}".format(var))
+The mean number of workouts in a week are 2.15
+The variance is 1.2275
+Problem Statement 4: Let the continuous random variable D denote the diameter of the hole drilled in an aluminum sheet. The target diameter to be achieved is 12.5mm. Random disturbances in the process often result in inaccuracy. Historical data shows that the distribution of D can be modelled by the PDF (𝑑) = 20𝑒−20(𝑑−12.5), 𝑑 ≥ 12.5. If a part with diameter > 12.6 mm needs to be scrapped, what is the proportion of those parts? What is the CDF when the diameter is of 11 mm? What is your conclusion regarding the proportion of scraps?
+
+def prob_func(d):
+    return (20*np.exp(-20*(d-12.5)))
+res=quad(prob_func,a=12.6,b=np.inf)[0]
+#integral(PDF(d) with limits 12.6,inf)--P(X>12.6)
+print("The proportion of the parts with diameter greater than 12.6mm is:",res)
+#If d<12.5, pdf(d)=0
+print("The cdf when the diameter is of 11mm is zero")
+#P(X<12.5)=0
+res1=quad(prob_func,a=12.5,b=12.6)[0]
+print("The proportion of the parts between 12.5 and 12.6 is:",res1)
+print("In other words sum of the proportion of the parts between 1.5 and 12.6 and proportion of the parts greater than 12.6 is 1,which indicates that the proportion of the parts less than 12.5 is 0")
+The proportion of the parts with diameter greater than 12.6mm is: 0.13533528323661398
+The cdf when the diameter is of 11mm is zero
+The proportion of the parts between 12.5 and 12.6 is: 0.8646647167633718
+In other words sum of the proportion of the parts between 1.5 and 12.6 and proportion of the parts greater than 12.6 is 1,which indicates that the proportion of the parts less than 12.5 is 0
+Problem Statement 5: A company manufactures LED bulbs with a faulty rate of 30%. If I randomly select 6 chosen LEDs, what is the probability of having 2 faulty LEDs in my sample? Calculate the average value of this process. Also evaluate the standard deviation associated with it.
+
+
+faulty_rate=0.3
+n=6
+r=2
+trails=20000
+binom=np.random.binomial(n,faulty_rate,trails)
+probability_of_2_faulty=np.sum(binom==2)/20000
+mean=binom.mean()
+standard_dev=binom.std()
+print("The probability of finding two faulty led's is {}".format(probability_of_2_faulty))
+print("The mean of the process is {}".format(mean))
+print('The standard deviation of the process is {}'.format(standard_dev))
+The probability of finding two faulty led's is 0.3213
+The mean of the process is 1.809
+The standard deviation of the process is 1.1304507950370948
+6.Gaurav and Barakha are both preparing for entrance exams. Gaurav attempts to solve 8 questions per day with a correction rate of 75%, while Barakha averages around 12 questions per day with a correction rate of 45%. What is the probability that each of them will solve 5 questions correctly? What happens in cases of 4 and 6 correct solutions? What do you infer from it? What are the two main governing factors affecting their ability to solve questions correctly? Give a pictorial representation of the same to validate your answer.
+
+gaurav_dist=np.random.binomial(8,0.75,20000)
+barkha_dist=np.random.binomial(12,0.45,20000)
+gaurav_prob=[]
+barkha_prob=[]
+for i in range(9):
+    gaurav_prob.append(np.sum(gaurav_dist==i)/20000)
+    barkha_prob.append(np.sum(barkha_dist==i)/20000)
+print("Probability of gaurav solving 5 questions correctly is:",gaurav_prob[5])
+print("Probability of barkha solving 5 questions correctly is:",barkha_prob[5])
+print("Probability of gaurav solving 4 questions correctly is:",gaurav_prob[4])
+print("Probability of barkha solving 4 questions correctly is:",barkha_prob[4])
+print("Probability of gaurav solving 6 questions correctly is:",gaurav_prob[6])
+print("Probability of barkha solving 6 questions correctly is:",barkha_prob[6])
+Probability of gaurav solving 5 questions correctly is: 0.2105
+Probability of barkha solving 5 questions correctly is: 0.22125
+Probability of gaurav solving 4 questions correctly is: 0.0876
+Probability of barkha solving 4 questions correctly is: 0.16775
+Probability of gaurav solving 6 questions correctly is: 0.3087
+Probability of barkha solving 6 questions correctly is: 0.21215
+x=[i for i in range(9)]
+plt.plot(x,gaurav_prob)
+plt.xlabel("Number of correct questions")
+plt.ylabel("P(x)")
+plt.title("Probability distribution of Gaurav with p=0.75,n=8")
+Out[50]:
+Text(0.5, 1.0, 'Probability distribution of Gaurav with p=0.75,n=8')
+
+plt.plot(x,barkha_prob)
+plt.xlabel("Number of correct questions")
+plt.ylabel("P(x)")
+plt.title("Probability distribution of Barkha with p=0.45,n=12")
+Out[47]:
+Text(0.5, 1.0, 'Probability distribution of Barkha with p=0.45,n=12')
+
+plt.plot(x,gaurav_prob,label="Gaurav")
+plt.plot(x,barkha_prob,label='Barkha')
+plt.xlabel("Number of correct questions")
+plt.ylabel("P(x)")
+plt.figlegend()
+plt.title("Probability distribution of gaurav and Barkha ")
+
+Text(0.5, 1.0, 'Probability distribution of gaurav and Barkha ')
+
+7.Customers arrive at a rate of 72 per hour to my shop. What is the probability of 𝑘 customers arriving in 4 minutes? a) 5 customers, b) not more than 3 customers, c) more than 3 customers. Give a pictorial representation of the same to validate your answer.
+
+
+mean_4mins=(72/60)*4
+dist=np.random.poisson(mean_4mins,1000)
+prob_5=np.sum(dist==5)/1000
+prob_less_than_3=np.sum(dist<=3)/1000
+prob_more_3=np.sum(dist>3)/1000
+print("The probability of 5 customers arriving is {}".format(prob_5))
+print('The probability of not more than 3 customers is :{}'.format(prob_less_than_3))
+print("The probability of more than 3 customers is {}".format(prob_more_3))
+sns.distplot(dist,hist=False,color='red')
+The probability of 5 customers arriving is 0.17
+The probability of not more than 3 customers is :0.31
+The probability of more than 3 customers is 0.69
+
+<matplotlib.axes._subplots.AxesSubplot at 0x1ced66cf8c8>
+
+Problem Statement 8: I work as a data analyst in Aeon Learning Pvt. Ltd. After analyzing data, I make reports, where I have the efficiency of entering 77 words per minute with 6 errors per hour. What is the probability that I will commit 2 errors in a 455-word financial report? What happens when the no. of words increases/decreases (in case of 1000 words, 255 words)? How is the 𝜆 affected? How does it influence the PMF? Give a pictorial representation of the same to validate your answer.
+
+
+n_errors_per_min=6/60 
+words=[100,255,455,1000,1500]
+prob=[]
+for i in words:
+    lamda=(i/77)*n_errors_per_min
+    dist=np.random.poisson(lamda,1000)
+    prob.append(np.sum(dist==2)/1000)
+plt.plot(words,prob)
+plt.xlabel("Number of Words")
+plt.ylabel("Probability of two errors")
+Out[17]:
+Text(0, 0.5, 'Probability of two errors')
+
+
+#From the above graph we can infer that as the number of words increases, the probability of committing two errors also increases
+
+#Problem Statement 9 is same as 4
+Problem Statement 10: Please compute the following: a) P(Z > 1.26), . P(Z < −0.86), P(Z > −1.37), P(−1.25 < Z < 0.37), . P(Z ≤ −4.6) b) Find the value 𝑧 such that 𝑃(𝑍 > 𝑧) = 0.05 c) Find the value of 𝑧 such that 𝑃(−𝑧 < 𝑍 < 𝑧) = 0.99
+
+
+print("P(Z > 1.26) : ",1-(st.norm.cdf(1.26)))
+print("P(Z < −0.86):",st.norm.cdf(-0.86))
+print("P(Z > −1.37):",1-(st.norm.cdf(-1.37)))
+print("P(−1.25 < Z < 0.37):",(st.norm.cdf(0.37)-st.norm.cdf(-1.25)))
+print("P(Z ≤ −4.6):",1-(st.norm.cdf(4.6)))
+print("value 𝑧 such that 𝑃(𝑍 > 𝑧) = 0.05:",np.absolute(st.norm.ppf(0.05)))
+print("value of 𝑧 such that 𝑃(−𝑧 < 𝑍 < 𝑧):",st.norm.ppf(0.99))
+P(Z > 1.26) :  0.10383468112130045
+P(Z < −0.86): 0.1948945212518084
+P(Z > −1.37): 0.914656549178033
+P(−1.25 < Z < 0.37): 0.5386589811336914
+P(Z ≤ −4.6): 2.1124547024964357e-06
+value 𝑧 such that 𝑃(𝑍 > 𝑧) = 0.05: 1.6448536269514729
+value of 𝑧 such that 𝑃(−𝑧 < 𝑍 < 𝑧): 2.3263478740408408
+Problem Statement 11: The current flow in a copper wire follow a normal distribution with a mean of 10 𝑚A and a variance of 4 (𝑚𝐴)2. What is the probability that a current measurement will exceed 13 𝑚𝐴? What is the probability that a current measurement is between 9 and 11mA? Determine the current measurement which has a probability of 0.98.
+
+
+mean=10
+std=2
+print("probability that a current measurement will exceed 13 𝑚𝐴:",1-(st.norm.cdf(x=13,loc=mean,scale=std)))
+print("probability that a current measurement is between 9 and 11mA:",(st.norm.cdf(x=11,loc=mean,scale=std)-st.norm.cdf(x=9,loc=mean,scale=std)))
+print("current measurement which has a probability of 0.98:",st.norm.ppf(q=0.98,loc=mean,scale=std))
+probability that a current measurement will exceed 13 𝑚𝐴: 0.06680720126885809
+probability that a current measurement is between 9 and 11mA: 0.38292492254802624
+current measurement which has a probability of 0.98: 14.107497821263646
+Problem Statement 12: The shaft in a piston has its diameter normally distributed with a mean of 0.2508 inch and a standard deviation of 0.0005 inch. The specifications of the shaft are 0.2500 ∓ 0.0015 inch. What proportion of shafts are in sync with the specifications? If the process is centered so that the mean is equal to the target value of 0.2500, what proportion of shafts conform to the new specifications? What is your conclusion from this experiment?
+
+
+mean=0.2508
+std=0.0005
+l1=0.2500-0.0015
+l2=0.2500+0.0015
+print("Proportion of shafts in sync with the specifications are:",(st.norm.cdf(x=l2,loc=mean,scale=std)-st.norm.cdf(x=l1,loc=mean,scale=std)))
+new_mean=0.2500
+print("Proportion of shafts in sync with the specifications after the process is centered is:",(st.norm.cdf(x=l2,loc=new_mean,scale=std)-st.norm.cdf(x=l1,loc=new_mean,scale=std)))
+Proportion of shafts in sync with the specifications are: 0.91924122831152
+Proportion of shafts in sync with the specifications after the process is centered is: 0.9973002039367398
+Conclusion: If the mean of the shafts is centered to the mean of the specifications of the shaft the proportion of shafts which are in sync with the specification increases.
