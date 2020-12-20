@@ -1,0 +1,75 @@
+In [27]:
+import scipy.stats as st
+import numpy as np
+import pandas as pd
+Problem Statement 1: Is gender independent of education level? A random sample of 395 people were surveyed and each person was asked to report the highest education level they obtained. The data that resulted from the survey is summarized in the following table: High School Bachelors Masters Ph.d. Total Female 60 54 46 41 201 Male 40 44 53 57 194 Total 100 98 99 98 395 Question: Are gender and education level dependent at 5% level of significance? In other words, given the data collected above, is there a relationship between the gender of an individual and the level of education that they have obtained?Null Hypothesis H0 : Gender and education level are independent. Alternative Hypothesis H1 : Gender and education level are dependent.
+In [28]:
+#We use chi-square test for independence with the help of the above data.
+alpha=0.05
+chi2,p,dof,expected=st.chi2_contingency([[60,54,46,41],[40,44,53,57]])
+df=pd.DataFrame(np.array([[60,54,46,41],expected[0],[40,44,53,57],expected[1]]),columns=['High School','Bachelors','Masters','Ph.d'],index=['Female','Exp_Female','Male','Exp_male'])
+if p<alpha:
+    print("Null Hypothesis is rejected(Gender and education level are dependent.)")
+else:
+    print('Null Hypothesis is accepted(Gender and education level are independent.)')
+Null Hypothesis is rejected(Gender and education level are dependent.)
+In [29]:
+#Contingency Table
+df
+Out[29]:
+High School	Bachelors	Masters	Ph.d
+Female	60.000000	54.000000	46.000000	41.000000
+Exp_Female	50.886076	49.868354	50.377215	49.868354
+Male	40.000000	44.000000	53.000000	57.000000
+Exp_male	49.113924	48.131646	48.622785	48.131646Problem Statement 2: Using the following data, perform a oneway analysis of variance using α=.05. Write up the results in APA format. [Group1: 51, 45, 33, 45, 67] [Group2: 23, 43, 23, 43, 45] [Group3: 56, 76, 74, 87, 56]Null Hypothesis H0 : mean1=mean2=mean3 Alternative Hypothesis H1 : mean1!=mean2!=mean3
+In [39]:
+alpha=0.05
+group1=[51, 45, 33, 45, 67]
+group2=[23, 43, 23, 43, 45]
+group3=[56, 76, 74, 87, 56]
+Out[39]:
+51.133333333333326
+In [66]:
+#Performing ANOVA without the pre-built function
+#ssw-- Sum of the squares within the samples
+#ssb-- Sum of the squares between the samples
+grand_mean=np.mean([np.mean(group1),np.mean(group2),np.mean(group3)])
+group1_dev=np.sum([(i-np.mean(group1))**2 for i in group1])
+group2_dev=np.sum([(i-np.mean(group2))**2 for i in group2])
+group3_dev=np.sum([(i-np.mean(group3))**2 for i in group3])
+ssw=np.sum([group1_dev,group2_dev,group3_dev])
+ssw_mean=ssw/12
+ssb=np.sum([(np.mean(group1)-grand_mean)**2,(np.mean(group2)-grand_mean)**2,(np.mean(group3)-grand_mean)**2])*5
+ssb_mean=ssb/2
+f_stat=ssb_mean/ssw_mean
+p=1-st.f.cdf(f_stat,dfn=2,dfd=12)
+print("F-value is :",f_stat)
+print("p-value is :",p)
+if p<alpha:
+    print("Null Hypothesis is rejected(mean1!=mean2!=mean3)")
+else:
+    print("Null Hypothesis is accepted(mean1=mean2=mean3)")
+F-value is : 9.747205503009457
+p-value is : 0.003059754143443061
+Null Hypothesis is rejected(mean1!=mean2!=mean3)
+In [67]:
+#Performing ANOVA using scipy.stats.f_oneway function
+f,p=st.f_oneway(group1,group2,group3)
+print("F-value is :",f)
+print("p-value is :",p)
+if p<alpha:
+    print("Null Hypothesis is rejected(mean1!=mean2!=mean3)")
+else:
+    print("Null Hypothesis is accepted(mean1=mean2=mean3)")
+F-value is : 9.747205503009463
+p-value is : 0.0030597541434430556
+Null Hypothesis is rejected(mean1!=mean2!=mean3)
+Problem Statement 3: Calculate F Test for given 10, 20, 30, 40, 50 and 5,10,15, 20, 25.
+In [68]:
+s1=[10,20,30,40,50]
+s2=[5,10,15,20,25]
+f,p=st.f_oneway(s1,s2)
+print("F-value is :",f)
+print("p-value is :",p)
+F-value is : 3.6
+p-value is : 0.0943497728424377
