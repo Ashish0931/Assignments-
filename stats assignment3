@@ -1,0 +1,36 @@
+In [1]:
+import scipy.stats as st
+import numpy as np
+In [4]:
+def z_stat(samp_mean,pop_mean,se):
+    return (samp_mean-pop_mean)/se
+def t_stat(samp_mean,pop_mean,se):
+    return (samp_mean-pop_mean)/se
+def sample_error(std,n):
+    return std/(np.sqrt(n))
+def z_test_pop_proportions(p1,p2,se):
+    return ((p1-p2)/se)
+def sample_error_pop_proportions(p1,p2,n1,n2):
+    return np.sqrt(((p1*(1-p1))/n1)+((p2*(1-p2))/n2))
+Problem Statement 1: Blood glucose levels for obese patients have a mean of 100 with a standard deviation of 15.
+A researcher thinks that a diet high in raw cornstarch will have a positive effect on blood glucose levels.
+A sample of 36 patients who have tried the raw cornstarch diet have a mean glucose level of 108. Test the hypothesis 
+that the raw cornstarch had an effect or not.
+Null Hypothesis H0 : mean=100(The raw cornstarch has no effect) Alternative Hypothesis H1 : mean!=100(The raw corn starch had an effect)(Two-tailed test)
+In [5]:
+alpha=0.05
+#Since the sample size >30,we use z test
+z=z_stat(samp_mean=108,pop_mean=100,se=sample_error(std=15,n=36))
+p=2*(1-st.norm.cdf(np.absolute(z)))
+if p<alpha:
+    print("Null Hypothesis is rejected(The raw corn starch had an effect)")
+else:
+    print("Null Hypothesis is accepted(The raw cornstarch has no effect)")
+Null Hypothesis is rejected(The raw corn starch had an effect)
+Problem Statement 2: In one state, 52% of the voters are Republicans, and 48% are Democrats.
+In a second state, 47% of the voters are Republicans, and 53% are Democrats.
+Suppose a simple random sample of 100 voters are surveyed from each state.
+What is the probability that the survey will show a greater percentage of Republican voters in the second state than in the first state?
+Given data: Population 1: p1(Republicans)=0.52 p1(Democrats)=0.48 n1=100 
+Population 2: p2(Republicans)=0.47 p2(Democrats)=0.53 n2=100Null Hypothesis H0 :mean1(Republican)=mean2(Republicans) 
+Alternative Hypothesis H1 : mean2(Republicans)>mean1(Republicans)(One-Tailed test)(Right-Tailed) (OR) mean1(Republicans)
