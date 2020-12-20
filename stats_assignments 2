@@ -1,0 +1,273 @@
+In [1]:
+import numpy as np
+import scipy.stats as st
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+In [6]:
+def z_stat(samp_mean,pop_mean,se):
+    return (samp_mean-pop_mean)/se
+def t_stat(samp_mean,pop_mean,se):
+    return (samp_mean-pop_mean)/se
+def sample_error(std,n):
+    return std/(np.sqrt(n))
+Problem Statement 1: In each of the following situations, state whether it is a correctly stated hypothesis testing problem and why?
+
+𝐻0: 𝜇 = 25, 𝐻1: 𝜇 ≠ 25 It is a correctly stated hypothesis and it is a two tailed test(𝜇<25 or 𝜇>25)
+𝐻0: 𝜎 > 10, 𝐻1: 𝜎 = 10 It is an incorrect hypothesis and the H1 should be 𝜎<10
+𝐻0: 𝑥 = 50, 𝐻1: 𝑥 ≠ 50 It is an correctly stated hypothesis and it is a two tailed test(x>50 or x<50)
+𝐻0: 𝑝 = 0.1, 𝐻1: 𝑝 = 0.5 It is an incorrect hypothesis and the alternative hypothesis should be H1:p ≠ 0.1
+𝐻0: 𝑠 = 30, 𝐻1: 𝑠 > 30 It is an incorrect hypothesis and the alternative hypothesis should be H1:s≠30
+Problem Statement 2: The college bookstore tells prospective students that the average cost of its textbooks is Rs. 52 with a standard deviation of Rs. 4.50. A group of smart statistics students thinks that the average cost is higher. To test the bookstore’s claim against their alternative, the students will select a random sample of size 100. Assume that the mean from their random sample is Rs. 52.80. Perform a hypothesis test at the 5% level of significance and state your decision.
+
+Null Hypothesis H0: 𝜇=52 Alternative Hypothesis H1: 𝜇!=52(Two tailed test)
+
+In [11]:
+#Since the population variance is given and the sample size>30 we can use the z-test
+alpha=0.05
+pop_mean=52
+pop_std=4.5
+samp_size=100
+samp_mean=52.80
+se=sample_error(pop_std,samp_size)
+z=z_stat(pop_mean,samp_mean,se)
+p=2*(1-(st.norm.cdf(np.absolute(z))))
+if p<alpha:
+    print("Null Hypothesis is rejected, 𝜇!=52")
+else:
+    print("Null Hypothesis is accepted,  𝜇=52")
+Null Hypothesis is accepted,  𝜇=52
+Problem Statement 3: A certain chemical pollutant in the Genesee River has been constant for several years with mean μ = 34 ppm (parts per million) and standard deviation σ = 8 ppm. A group of factory representatives whose companies discharge liquids into the river is now claiming that they have lowered the average with improved filtration devices. A group of environmentalists will test to see if this is true at the 1% level of significance. Assume \ that their sample of size 50 gives a mean of 32.5 ppm. Perform a hypothesis test at the 1% level of significance and state your decision.
+
+Null Hypothesis H0: 𝜇=34, Alternative Hypothesis H1: 𝜇<34(One tailed test)(Left-tailed)
+In [12]:
+#Since the population variance is given and the sample size>30 we can use the z-test
+z=z_stat(pop_mean=34,samp_mean=32.5,se=sample_error(8,50))
+p=st.norm.cdf(z)
+alpha=0.01
+if p<alpha:
+    print("Null Hypothesis is rejected, 𝜇<34")
+else:
+    print("Null Hypothesis is accepted,  𝜇=34")
+Null Hypothesis is accepted,  𝜇=34
+Problem Statement 4: Based on population figures and other general information on the U.S. population, suppose it has been estimated that, on average, a family of four in the U.S. spends about $1135 annually on dental expenditures. Suppose further that a regional dental association wants to test to determine if this figure is accurate for their area of country. To test this, 22 families of 4 are randomly selected from the population in that area of the country and a log is kept of the family’s dental expenditure for one year. The resulting data are given below. Assuming, that dental expenditure is normally distributed in the population, use the data and an alpha of 0.5 to test the dental association’s hypothesis. 1008, 812, 1117, 1323, 1308, 1415, 831, 1021, 1287, 851, 930, 730, 699, 872, 913, 944, 954, 987, 1695, 995, 1003, 994
+
+Null Hypothesis : H0: mean=$1135(on average,a family of four in the U.S.spends about $1135 annually on dental expenditures) Alternative Hypothesis : H1:mean!=$1135(Two tailed test)
+In [13]:
+# Since the sample size<30 and population variance is not known and the sample is derived from a normal population we use t-test
+alpha=0.5
+samp_data=np.array([1008,812,1117,1323,1308,1415,831,1021,1287,851,930,730,699,872,913,944,954,987,1695,995,1003,994])
+samp_mean=np.mean(samp_data)
+samp_std=np.std(samp_data)
+t=t_stat(pop_mean=1135,samp_mean=samp_mean,se=sample_error(samp_std,len(samp_data)))
+p=2*(1-st.t.cdf(x=np.absolute(t),df=21))
+if p<alpha:
+    print("Null Hypothesis is rejected, 𝜇!=$1135")
+else:
+    print("Null Hypothesis is accepted,  𝜇=$1135")
+Null Hypothesis is rejected, 𝜇!=$1135
+Problem Statement 5: In a report prepared by the Economic Research Department of a major bank the Department manager maintains that the average annual family income on Metropolis is $48,432. What do you conclude about the validity of the report if a random sample of 400 families shows and average income of $48,574 with a standard deviation of 2000?Null Hypothesis H0 : Average Family Income on Metropolis is $48,432(𝜇=48,432) Alternative Hypothesis H1 : 𝜇!=48432(Two-Tailed test)
+In [14]:
+#Since the sample size>30 and the normality of the sample is not known we can use z-test
+alpha=0.05
+z=z_stat(pop_mean=48432,samp_mean=48574,se=sample_error(2000,400))
+p=2*(1-st.norm.cdf(x=np.absolute(z)))
+if p<alpha:
+    print("Null Hypothesis is rejected(Average family income of metropolis is not $48432)")
+else:
+    print("Null Hypothesis is accepted(Average family income of metropolis is $48432)")
+Null Hypothesis is accepted(Average family income of metropolis is $48432)
+Problem Statement 6: Suppose that in past years the average price per square foot for warehouses in the United States has been $32.28. A national real estate investor wants to determine whether that figure has changed now. The investor hires a researcher who randomly samples 19 warehouses that are for sale across the United States and finds that the mean price per square foot is $31.67, with a standard deviation of $1.29. assume that the prices of warehouse footage are normally distributed in population. If the researcher uses a 5% level of significance, what statistical conclusion can be reached? What are the hypotheses?Null Hypothesis H0 : Average Price per square foot for wharehouses in US is $32.28(𝜇=$32.28) Alternative Hypothesis H1 : 𝜇!=32.28(Two-Tailed test)
+In [15]:
+#Since the sample size <30 and population std is not known we use t-test
+alpha=0.05
+t=t_stat(pop_mean=32.28,samp_mean=31.67,se=sample_error(std=1.29,n=19))
+p=2*(1-st.t.cdf(df=18,x=np.absolute(t)))
+if p<alpha:
+    print("Null Hypothesis is rejected(𝜇!=$32.28)")
+else:
+    print("Null Hypothesis is accepted(𝜇=$32.28)")
+Null Hypothesis is accepted(𝜇=$32.28)
+Problem Statement 7 Fill in the blank spaces in the table and draw your conclusions from it. In the question values of alpha and standard deviation are not given, so it is not possible to find the value of beta.Problem Statement 8: Find the t-score for a sample size of 16 taken from a population with mean 10 when the sample mean is 12 and the sample standard deviation is 1.5.
+In [16]:
+print("t-score is :",t_stat(pop_mean=10,samp_mean=12,se=sample_error(std=1.5,n=16)))
+t-score is : 5.333333333333333
+Problem Statement 9: Find the t-score below which we can expect 99% of sample means will fall if samples of size 16 are taken from a normally distributed population.
+In [17]:
+print("The t-score below which we can expect 99% of sample means will fall is : ",st.t.ppf(q=0.99,df=15))
+The t-score below which we can expect 99% of sample means will fall is :  2.602480294995493
+Problem Statement 10: If a random sample of size 25 drawn from a normal population gives a mean of 60 and a standard deviation of 4, find the range of t-scores where we can expect to find the middle 95% of all sample means. Compute the probability that (−𝑡0.05
+In [18]:
+print("The t-score where we can expect to find the middle 95%of all sample means is :",st.t.ppf(q=0.95,df=24))
+print("P(−𝑡0.05 <𝑡<𝑡0.10) = ",1-0.05-0.10)
+The t-score where we can expect to find the middle 95%of all sample means is : 1.7108820799094275
+P(−𝑡0.05 <𝑡<𝑡0.10) =  0.85
+Problem Statement 11: Two-tailed test for difference between two population means Is there evidence to conclude that the number of people travelling from Bangalore to Chennai is different from the number of people travelling from Bangalore to Hosur in a week, given the following: Population 1: Bangalore to Chennai n1 = 1200 x1 = 452 s1 = 212 Population 2: Bangalore to Hosur n2 = 800 x2 = 523 s2 = 185Null Hypothesis H0: number of people travelling from Bangalore to Chennai is same as from the number of people travelling from Bangalore to Hosur in a week(𝜇1=𝜇2) Alternative Hypothesis H1:number of people travelling from Bangalore to Chennai is different from the number of people travelling from Bangalore to Hosur in a week(𝜇1!=𝜇2)
+In [19]:
+# Since the sample sizes are larger we use z-test for checking the equality of population means
+def z_stat_twomeans(x1,x2,se):
+    return (x1-x2)/se
+def sample_error_twomeans(s1,n1,s2,n2):
+    return (np.sqrt((s1**2/n1)+(s2**2/n2)))
+alpha=0.05
+z=z_stat_twomeans(x1=452,x2=523,se=sample_error_twomeans(s1=212,n1=1200,s2=185,n2=800))
+p=2*(1-st.norm.cdf(x=np.absolute(z)))
+if p<alpha:
+    print("Null Hypothesis is rejected(number of people travelling from Bangalore to Chennai is different from the number of people travelling from Bangalore to Hosur in a week(𝜇1!=𝜇2)")
+else:
+    print('Null Hypothesis is accepted(number of people travelling from Bangalore to Chennai is same as  from the number of people travelling from Bangalore to Hosur in a week(𝜇1=𝜇2))')
+Null Hypothesis is rejected(number of people travelling from Bangalore to Chennai is different from the number of people travelling from Bangalore to Hosur in a week(𝜇1!=𝜇2)
+Problem Statement 12: Is there evidence to conclude that the number of people preferring Duracell battery is different from the number of people preferring Energizer battery, given the following: Population 1: Duracell n1 = 100 x1 = 308 s1 = 84 Population 2: Energizer n2 = 100 x2 = 254 s2 = 67Null Hypothesis H0: there is evidence to conclude that the number of people preferring Duracell battery is same as from the number of people preferring Energizer battery (𝜇1=𝜇2) Alternative Hypothesis H1:there is evidence to conclude that the number of people preferring Duracell battery is different from the number of people preferring Energizer battery (𝜇1!=𝜇2)
+In [20]:
+# Since the sample sizes are larger we use z-test for checking the equality of population means
+alpha=0.05
+z=z_stat_twomeans(x1=308,x2=254,se=sample_error_twomeans(s1=84,n1=100,s2=67,n2=100))
+p=2*(1-st.norm.cdf(x=np.absolute(z)))
+if p<alpha:
+    print("Null Hypothesis is rejected(there is evidence to conclude that the number of people preferring Duracell battery is different from the number of people preferring Energizer battery (𝜇1!=𝜇2))")
+else:
+    print("Null Hypothesis is accepted(there is evidence to conclude that the number of people preferring Duracell battery is same as from the number of people preferring Energizer battery (𝜇1=𝜇2))")
+Null Hypothesis is rejected(there is evidence to conclude that the number of people preferring Duracell battery is different from the number of people preferring Energizer battery (𝜇1!=𝜇2))
+Problem Statement 13: Pooled estimate of the population variance Does the data provide sufficient evidence to conclude that average percentage increase in the price of sugar differs when it is sold at two different prices? Population 1: Price of sugar = Rs. 27.50 n1 = 14 x1 = 0.317% s1 = 0.12% Population 2: Price of sugar = Rs. 20.00 n2 = 9 x2 = 0.21% s2 = 0.11%Null Hypothesis H0: Average percentage increase in the price of sugar is same when it is sold at two different prices. Alternative Hypothesis H1: Average percentage increase in the price of sugar differs when it is sold at two different prices.
+In [22]:
+#Sample sizes are small and the population variance is unknown we use t-test for equality of means and estimate the population variance
+alpha=0.05
+def est_std(n1,s1,n2,s2):
+    return np.sqrt(((n1*s1**2)+(n2*s2**2))/(n1+n2-2))
+est_standard_dev=est_std(n1=14,s1=0.12,n2=9,s2=0.11)
+t=z_stat_twomeans(x1=0.317,x2=0.21,se=sample_error_twomeans(s1=est_standard_dev,s2=est_standard_dev,n1=14,n2=9))
+p=2*(1-st.t.cdf(x=np.absolute(t),df=14+9-2))
+if p<alpha:
+    print("Null Hypothesis is rejected(Average percentage increase in the price of sugar differs when it is sold at two different prices.)")
+else:
+    print("Null Hypothesis is accepted(Average percentage increase in the price of sugar is same when it is sold at two different prices.)")
+Null Hypothesis is accepted(Average percentage increase in the price of sugar is same when it is sold at two different prices.)
+Problem Statement 14: The manufacturers of compact disk players want to test whether a small price reduction is enough to increase sales of their product. Is there evidence that the small price reduction is enough to increase sales of compact disk players? Population 1: Before reduction n1 = 15 x1 = Rs. 6598 s1 = Rs. 844 Population 2: After reduction n2 = 12 x2 = RS. 6870 s2 = Rs. 669Null Hypothesis H0 : 𝜇2-𝜇1<=0(Average Sales before and after reduction is same or less) Alternative Hypothesis H1 : 𝜇2>𝜇1(Average Sales after reduction increased)(One Tailed Test)
+In [23]:
+alpha=0.05
+est_stand_dev=est_std(n1=15,s1=844,n2=12,s2=669)
+t=z_stat_twomeans(x1=6870,x2=6598,se=sample_error_twomeans(s1=est_stand_dev,s2=est_stand_dev,n1=15,n2=12))
+p=1-(st.t.cdf(x=t,df=15+12-1))
+if p<alpha:
+    print("Null Hypothesis is rejected(Average Sales after reduction increased)")
+else: 
+    print("Null Hypothesis is accepted(Average Sales before and after reduction is same or less)")
+Null Hypothesis is accepted(Average Sales before and after reduction is same or less)
+Problem Statement 15: Comparisons of two population proportions when the hypothesized difference is zero Carry out a two-tailed test of the equality of banks’ share of the car loan market in 1980 and 1995. Population 1: 1980 n1 = 1000 x1 = 53 𝑝 1 = 0.53 Population 2: 1985 n2 = 100 x2 = 43 𝑝 2= 0.53Null Hypothesis H0: Banks share of the car loan market in 1980 and 1995 is equal(P1=P2) Alternative Hypothesis H1 : Banks share of the car loan market in 1980 and 1995 is not equal(P1!=P2)(Two-Tailed test)
+In [24]:
+def z_test_pop_proportions(p1,p2,se):
+    return ((p1-p2)/se)
+def sample_error_pop_proportions(p1,p2,n1,n2):
+    return np.sqrt(((p1*(1-p1))/n1)+((p2*(1-p2))/n2))
+alpha=0.05
+p1=53/1000
+p2=43/100
+z=z_test_pop_proportions(p1=p1,p2=p2,se=sample_error_pop_proportions(p1=p1,p2=p2,n1=1000,n2=100))
+p=2*(1-st.norm.cdf(x=np.absolute(z)))
+if p<alpha:
+    print("Null Hypothesis is rejected(Banks share of the car loan market in 1980 and 1995 is not equal(P1!=P2))")
+else:
+    print("Null Hypothesis is accepted(Banks share of the car loan market in 1980 and 1995 is equal(P1=P2))")
+Null Hypothesis is rejected(Banks share of the car loan market in 1980 and 1995 is not equal(P1!=P2))
+Problem Statement 16: Carry out a one-tailed test to determine whether the population proportion of traveler’s check buyers who buy at least $2500 in checks when sweepstakes prizes are offered as at least 10% higher than the proportion of such buyers when no sweepstakes are on. Population 1: With sweepstakes n1 = 300 x1 = 120 𝑝 = 0.40 Population 2: No sweepstakes n2 = 700 x2 = 140 𝑝 2= 0.20Null Hypothesis H0 : P1-P2>=0.1(the population proportion of traveler’s check buyers who buy at least $2500 in checks when sweepstakes prizes are offered as at least 10% higher than the proportion of such buyers when no sweepstakes are on.) Alternative Hypothesis H1 : P1-P2<0.1(Left-tailed test)
+In [25]:
+alpha=0.05
+se=sample_error_pop_proportions(p1=0.4,p2=0.2,n1=300,n2=140)
+z=((0.4-0.2-0.1)/se)
+p=st.norm.cdf(z)
+if p<alpha:
+    print("Null Hypothesis is rejected")
+else:
+    print("Null Hypothesis is accepted(the population proportion of traveler’s check buyers who buy at least $2500 in checks when sweepstakes prizes are offered as at least 10% higher than the proportion of such buyers when no sweepstakes are on)")
+Null Hypothesis is accepted(the population proportion of traveler’s check buyers who buy at least $2500 in checks when sweepstakes prizes are offered as at least 10% higher than the proportion of such buyers when no sweepstakes are on)
+Problem Statement 17: A die is thrown 132 times with the following results: Number turned up: 1, 2, 3, 4, 5, 6 Frequency: 16, 20, 25, 14, 29, 28 Is the die unbiased? Consider the degrees of freedom as 𝑝−1.Null Hypotheis H0: The dice is unbiased Alternative Hypothesis H1 : The dice is biasedIf a die is unbiased then the probabilities of getting 1,2,3,4,5,6 must be equal to 1/6. So the expected frequencies of 1,2,3,4,5,6 for 132 trails must be 22(22/132=1/6)
+In [26]:
+observed=np.array([16,20,25,14,29,28])
+expected=np.array([22,22,22,22,22,22])
+chi,p=st.chisquare(f_obs=observed,f_exp=expected)
+if p<0.05:
+    print("Null Hypothesis is rejected(Dice is biased)")
+else:
+    print("Null Hypothesis is accepted(Dice is unbiased)")
+Null Hypothesis is accepted(Dice is unbiased)
+Problem Statement 18: In a certain town, there are about one million eligible voters. A simple random sample of 10,000 eligible voters was chosen to study the relationship between gender and participation in the last election. The results are summarized in the following 2X2 (read two by two) contingency table: Men Women Total Voted 2792 3591 6383 Not Voted 1486 2131 3617 Total 4278 5722 10000 We would want to check whether being a man or a woman (columns) is independent of having voted in the last election (rows). In other words, is “gender and voting independent”?Null Hypothesis H0 :Gender and voting is independent Alternative Hypothesis H1 : Gender and voting are dependent
+In [27]:
+#We use a chi-square test with the help of the above contingency table and calculate the chi-square variate 
+alpha=0.05
+inp=np.array([[2792,3591],[1486,2131]])
+chi2,p,dof,expected=st.chi2_contingency(inp)
+print("The expected values are :",expected)
+if p<alpha:
+    print("Null Hypothesis is rejected(Gender and voting are dependent)")
+else:
+    print("Null Hypothesis is accepted(Gender and voting is independent)")
+The expected values are : [[2730.6474 3652.3526]
+ [1547.3526 2069.6474]]
+Null Hypothesis is rejected(Gender and voting are dependent)
+Problem Statement 19: A sample of 100 voters are asked which of four candidates they would vote for in an election. The number supporting each candidate is given below: Higgins Reardon White Charlton 41 19 24 16 Do the data suggest that all candidates are equally popular? [Chi-Square = 14.96, with 3 df, 𝑝<0.05.Null Hypothesis H0 : All candidates are equally popular Alternative Hypothesis H1 : All candidates are not equally popular
+In [28]:
+alpha=0.05
+obs=[41,19,24,16]
+exp=[25,25,25,25]
+chi,p=st.chisquare(f_obs=obs,f_exp=exp)
+if p<alpha:
+    print("Null Hypothesis is rejected(All candidates are not equally popular)")
+else:
+    print("Null Hypothesis is accepted(All candidates are equally popular)")
+Null Hypothesis is rejected(All candidates are not equally popular)
+Problem Statement 20: Children of three ages are asked to indicate their preference for three photographs of adults. Do the data suggest that there is a significant relationship between age and photograph preference? What is wrong with this study? [Chi-Square = 29.6, with 4 df: 𝑝 < 0.05].Null Hypothesis H0 : There is no significant relationship between age and photograph preference. Alternative Hypothesis H1 : There is a significant relationship between age and photograph preference.
+In [29]:
+alpha=0.05
+inp=np.array([[18,22,20],[2,28,40],[20,10,40]])
+chi2,p,dof,expected=st.chi2_contingency(inp)
+if p<alpha:
+    print("Null Hypothesis is rejected(There is a significant relationship between age and photograph preference. )")
+else:
+    print("Null Hypothesis is accepted(There is no significant relationship between age and photograph preference.)")
+Null Hypothesis is rejected(There is a significant relationship between age and photograph preference. )
+Problem Statement 21: A study of conformity using the Asch paradigm involved two conditions: one where one confederate supported the true judgement and another where no confederate gave the correct response. Support No Support Conform 18 40 Not Conform 32 10 Is there a significant difference between the "support" and "no support" conditions in the frequency with which individuals are likely to conform? [Chi-Square = 19.87, with 1 df: 𝑝 < 0.05]. ProblemNull Hypothesis H0 : There is no significant difference between the "support" and "no support" conditions in the frequency with which individuals are likely to conform. Alternative Hypothesis H1 : There is a significant difference between the "support" and "no support" conditions in the frequency with which individuals are likely to conform.
+In [30]:
+alpha=0.05
+inp=np.array([[18,40],[32,10]])
+chi2,p,dof,expected=st.chi2_contingency(inp)
+if p<alpha:
+    print("Null Hypothesis is rejected(There is a significant difference between the support and no support conditions in the frequency with which individuals are likely to conform.)")
+else:
+    print("Null Hypothesis is accepted(There is no significant difference between the support and no support conditions in the frequency with which individuals are likely to conform.)")
+Null Hypothesis is rejected(There is a significant difference between the support and no support conditions in the frequency with which individuals are likely to conform.)
+Problem Statement 22: We want to test whether short people differ with respect to their leadership qualities (Genghis Khan, Adolf Hitler and Napoleon were all stature-deprived, and how many midget MP's are there?) The following table shows the frequencies with which 43 short people and 52 tall people were categorized as "leaders", "followers" or as "unclassifiable". Is there a relationship between height and leadership qualities? [Chi-Square = 10.71, with 2 df: 𝑝 < 0.01].
+In [4]:
+df=pd.DataFrame([[12,32],[22,14],[9,6]],columns=['Short','Tall'],index=['Leader','Follower','Unclassifiable'])
+df
+Out[4]:
+Short	Tall
+Leader	12	32
+Follower	22	14
+Unclassifiable	9	6Null Hypothesis H0 : There is no relationship between height and leadership qualities. Alternative Hypothesis H1 : There is a relationship between height and leadership qualities.
+In [31]:
+alpha=0.01
+inp=np.array([[12,32],[22,14],[9,6]])
+chi2,p,dof,expected=st.chi2_contingency(inp)
+if p<alpha:
+    print("Null Hypothesis is rejected(There is a relationship between height and leadership qualities.)")
+else:
+    print("Null Hypothesis is accepted(There is no relationship between height and leadership qualities.)")
+Null Hypothesis is rejected(There is a relationship between height and leadership qualities.)
+Problem Statement 23: Each respondent in the Current Population Survey of March 1993 was classified as employed, unemployed, or outside the labor force. The results for men in California age 35- 44 can be cross-tabulated by marital status, as follows: Men of different marital status seem to have different distributions of labor force status. Or is this just chance variation? (you may assume the table results from a simple random sample.)
+In [3]:
+df=pd.DataFrame([[679,103,114],[63,10,20],[42,18,25]],columns=['Married','Widowed,Divorced or seperated','Never Married'],index=['Employed','Unemployed','Not in labor force'])
+df
+Out[3]:
+Married	Widowed,Divorced or seperated	Never Married
+Employed	679	103	114
+Unemployed	63	10	20
+Not in labor force	42	18	25Null Hypothesis H0: Marital status and employement status are independent. Alternative Hypothesis H1 : Marital status and employement status are dependent.
+In [32]:
+alpha=0.05
+inp=np.array([[679,103,114],[63,10,20],[42,18,25]])
+chi2,p,dof,expected=st.chi2_contingency(inp)
+if p<alpha:
+    print("Null Hypothesis is rejected(Marital status and employement status are dependent.)")
+else:
+    print("Null Hypothesis is accepted(Marital status and employement status are independent.)")
+Null Hypothesis is rejected(Marital status and employement status are dependent.)
